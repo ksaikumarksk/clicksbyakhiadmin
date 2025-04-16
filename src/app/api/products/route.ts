@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProducts } from "@/lib/actions";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const products = await getProducts();
     console.log("Products retrieved:", products);

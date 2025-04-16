@@ -10,17 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { addProduct } from "@/lib/actions"
 // import { ProductList } from "@/components/product-list"
-import type { Product } from "@/lib/models/product"
-import { ProductList } from "./product-list"
 
 export default function AdminPanel() {
-  const [products, setProducts] = useState<Product[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
       name: "",
-      // description: "",
       price: "",
       oldPrice: "",
       rating: "",
@@ -30,7 +26,17 @@ export default function AdminPanel() {
     }
   })
 
-  async function onSubmit(data: any) {
+  interface FormData {
+    name: string;
+    price: string;
+    oldPrice: string;
+    rating: string;
+    discount: string;
+    image: string;
+    url: string;
+  }
+
+  async function onSubmit(data: FormData) {
     try {
       setIsSubmitting(true)
       
@@ -46,8 +52,6 @@ export default function AdminPanel() {
       const newProduct = await addProduct(formattedData)
       console.log("Product added:", newProduct)
 
-      // Add the new product to the state
-      setProducts((prev) => [...prev, newProduct])
 
       // Reset the form
       reset()
