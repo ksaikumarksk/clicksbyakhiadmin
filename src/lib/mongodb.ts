@@ -1,29 +1,35 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
-if (!process.env.MONGODB_URI) {
+declare global {
+  // Ensure globalThis has a mongoose cache (for development)
+  // eslint-disable-next-line no-var
+  var mongoose: { conn: Mongoose | null; promise: Promise<Mongoose> | null } | undefined;
+}
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
 
-const uri = process.env.MONGODB_URI;
-let cached = (global as any).mongoose;
+let cached = global.mongoose ?? { conn: null, promise: null };
 
 if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+  cached = global.mongoose = { conn: null, promise: null };
 }
 
-async function clientPromise() {
-  if (cached.conn) {
-    return cached.conn;
-  }
+async function clientPromise(): Promise<Mongoose> {
+  if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(uri, {
+    
+    cached.promise = mongoose.connect(MONGODB_URI as string, {
       serverApi: {
         version: "1",
         strict: true,
         deprecationErrors: true,
-      } as any
-    }).then((mongoose) => mongoose);
+      },
+    });
   }
 
   cached.conn = await cached.promise;
@@ -31,6 +37,3 @@ async function clientPromise() {
 }
 
 export default clientPromise;
-
-
-// export default clientPromise

@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { addProduct } from "@/lib/actions"
+import { addProduct, } from "@/lib/actions"
+import { Product } from "@/lib/models/product"
 // import { ProductList } from "@/components/product-list"
 
 export default function AdminPanel() {
@@ -49,7 +50,7 @@ export default function AdminPanel() {
         discount: parseFloat(data.discount),
       }
       
-      const newProduct = await addProduct(formattedData)
+      const newProduct = await addProduct(formattedData as Omit<Product, "_id" | "createdAt" | "updatedAt">)
       console.log("Product added:", newProduct)
 
 
