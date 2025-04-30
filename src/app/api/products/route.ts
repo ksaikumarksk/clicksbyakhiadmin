@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getProducts } from "@/lib/actions";
 
 export async function GET() {
+  // console.log("GET /api/products called");
   try {
     const products = await getProducts();
     console.log("Products retrieved:", products);
