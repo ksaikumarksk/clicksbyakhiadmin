@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useState } from "react"
 import { useForm } from "react-hook-form"
 import { Loader2, Plus } from 'lucide-react'
 
@@ -8,12 +8,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { addProduct, } from "@/lib/actions"
+import { addProduct } from "@/lib/actions"
 import { Product } from "@/lib/models/product"
 // import { ProductList } from "@/components/product-list"
 
 export default function AdminPanel() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  // const [products, setProducts] = useState<Product[]>([])
+
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -24,6 +26,7 @@ export default function AdminPanel() {
       discount: "",
       image: "",
       url: "",
+      category: "",
     }
   })
 
@@ -35,26 +38,44 @@ export default function AdminPanel() {
     discount: string;
     image: string;
     url: string;
+    category: string;
   }
+
+  // async function fetchProducts() {
+  //   const data = await getProducts()
+  //   // setProducts(data)
+  // }
+
+  // useEffect(() => {
+  //   fetchProducts()
+  // }, [])
 
   async function onSubmit(data: FormData) {
     try {
       setIsSubmitting(true)
-      
+      console.log("Form data:", data)
+
       // Convert numeric fields
       const formattedData = {
         ...data,
         price: parseFloat(data.price),
+
         oldPrice: parseFloat(data.oldPrice),
         rating: parseFloat(data.rating),
         discount: parseFloat(data.discount),
       }
+
+      console.log("Formatted data:", formattedData)
       
       const newProduct = await addProduct(formattedData as Omit<Product, "_id" | "createdAt" | "updatedAt">)
       console.log("Product added:", newProduct)
 
 
-      // Reset the form
+
+      // const newProduct = await addProduct(formattedData)
+      // console.log("Product added:", newProduct)
+
+      // await fetchProducts()
       reset()
     } catch (error) {
       console.error("Error adding product:", error)
@@ -65,6 +86,7 @@ export default function AdminPanel() {
 
   return (
     <div className="grid gap-8 max-w-4xl mx-auto">
+     
       <Card>
         <CardContent className="pt-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -78,7 +100,7 @@ export default function AdminPanel() {
                 />
                 {errors.name && <p className="text-sm text-red-500">{errors.name.message as string}</p>}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="price">Price</Label>
                 <Input 
@@ -90,7 +112,7 @@ export default function AdminPanel() {
                 />
                 {errors.price && <p className="text-sm text-red-500">{errors.price.message as string}</p>}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="oldPrice">Old Price</Label>
                 <Input 
@@ -102,7 +124,7 @@ export default function AdminPanel() {
                 />
                 {errors.oldPrice && <p className="text-sm text-red-500">{errors.oldPrice.message as string}</p>}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="rating">Rating (0-5)</Label>
                 <Input 
@@ -116,7 +138,7 @@ export default function AdminPanel() {
                 />
                 {errors.rating && <p className="text-sm text-red-500">{errors.rating.message as string}</p>}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="discount">Discount (%)</Label>
                 <Input 
@@ -129,7 +151,7 @@ export default function AdminPanel() {
                 />
                 {errors.discount && <p className="text-sm text-red-500">{errors.discount.message as string}</p>}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="image">Image URL</Label>
                 <Input 
@@ -139,7 +161,7 @@ export default function AdminPanel() {
                 />
                 {errors.image && <p className="text-sm text-red-500">{errors.image.message as string}</p>}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="url">Product URL</Label>
                 <Input 
@@ -149,10 +171,24 @@ export default function AdminPanel() {
                 />
                 {errors.url && <p className="text-sm text-red-500">{errors.url.message as string}</p>}
               </div>
-              
-              
+
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <select
+                  id="category"
+                  className="w-full border rounded-md px-3 py-2"
+                  {...register("category", { required: "Category is required" })}
+                >
+                  <option value="">Select a category</option>
+                  <option value="fashion">Fashion</option>
+                  <option value="home">Home</option>
+                  <option value="electronics">Electronics</option>
+                  <option value="need">Need</option>
+                </select>
+                {errors.category && <p className="text-sm text-red-500">{errors.category.message as string}</p>}
+              </div>
             </div>
-            
+
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
@@ -169,8 +205,6 @@ export default function AdminPanel() {
           </form>
         </CardContent>
       </Card>
-
-      {/* {products.length > 0 && <ProductList products={products} />} */}
     </div>
   )
 }

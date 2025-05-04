@@ -6,6 +6,7 @@ export interface Product extends Document {
     oldPrice: number;
     rating: number;
     discount: number;
+    category: string;
     image: string;
     url: string;
     createdAt?: Date;
@@ -31,6 +32,7 @@ const ProductSchema = new Schema<Product>(
     oldPrice: { type: Number, required: true },
     rating: { type: Number, required: true },
     discount: { type: Number, required: true },
+    category: { type: String, required: true },
     image: { type: String, required: true },
     url: { type: String, required: true },
   },
