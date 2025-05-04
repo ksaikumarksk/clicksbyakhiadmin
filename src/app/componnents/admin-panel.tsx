@@ -39,14 +39,7 @@ export default function AdminPanel() {
     category: string;
   }
 
-  // async function fetchProducts() {
-  //   const data = await getProducts()
-  //   // setProducts(data)
-  // }
 
-  // useEffect(() => {
-  //   fetchProducts()
-  // }, [])
 
   async function onSubmit(data: FormData) {
     try {
@@ -68,12 +61,6 @@ export default function AdminPanel() {
       const newProduct = await addProduct(formattedData as Omit<Product, "_id" | "createdAt" | "updatedAt">)
       console.log("Product added:", newProduct)
 
-
-
-      // const newProduct = await addProduct(formattedData)
-      // console.log("Product added:", newProduct)
-
-      // await fetchProducts()
       reset()
     } catch (error) {
       console.error("Error adding product:", error)
