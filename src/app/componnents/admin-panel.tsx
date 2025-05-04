@@ -10,11 +10,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { addProduct } from "@/lib/actions"
 import { Product } from "@/lib/models/product"
-// import { ProductList } from "@/components/product-list"
 
 export default function AdminPanel() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  // const [products, setProducts] = useState<Product[]>([])
 
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
