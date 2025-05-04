@@ -39,14 +39,13 @@ export default function AdminPanel() {
     category: string;
   }
 
-
+// console.log("fjijei")
 
   async function onSubmit(data: FormData) {
     try {
       setIsSubmitting(true)
       console.log("Form data:", data)
 
-      // Convert numeric fields
       const formattedData = {
         ...data,
         price: parseFloat(data.price),
