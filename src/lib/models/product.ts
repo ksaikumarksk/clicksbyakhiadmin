@@ -3,9 +3,9 @@ export interface Product extends Document {
     _id: string; // Make _id required
     name: string;
     price: number;
-    oldPrice: number;
-    rating: number;
-    discount: number;
+    oldPrice: number|null;
+    rating: number | null;
+    discount: number | null;
     category: string;
     image: string;
     url: string;
@@ -29,9 +29,9 @@ const ProductSchema = new Schema<Product>(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true },
-    oldPrice: { type: Number, required: true },
-    rating: { type: Number, required: true },
-    discount: { type: Number, required: true },
+    oldPrice: { type: Number, },
+    rating: { type: Number,},
+    discount: { type: Number, },
     category: { type: String, required: true },
     image: { type: String, required: true },
     url: { type: String, required: true },

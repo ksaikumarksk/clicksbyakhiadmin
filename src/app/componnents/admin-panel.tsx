@@ -10,9 +10,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { addProduct } from "@/lib/actions"
 import { Product } from "@/lib/models/product"
+import { toast } from "sonner"
 
 export default function AdminPanel() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  // const [imageError, setImageError] = useState(false)
 
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -41,18 +44,29 @@ export default function AdminPanel() {
 
 // console.log("fjijei")
 
+function convertToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = error => reject(error)
+  })
+}
+
   async function onSubmit(data: FormData) {
     try {
       setIsSubmitting(true)
       console.log("Form data:", data)
+       if (!imageFile) throw new Error("Image file is required")
+      const base64Image = await convertToBase64(imageFile)
 
       const formattedData = {
         ...data,
         price: parseFloat(data.price),
-
-        oldPrice: parseFloat(data.oldPrice),
-        rating: parseFloat(data.rating),
-        discount: parseFloat(data.discount),
+        oldPrice: data.oldPrice ? parseFloat(data.oldPrice) : null,
+        rating: data.rating ? parseFloat(data.rating) : null,
+        discount: data.discount ? parseFloat(data.discount) : null,
+        image: base64Image,
       }
 
       console.log("Formatted data:", formattedData)
@@ -61,8 +75,12 @@ export default function AdminPanel() {
       console.log("Product added:", newProduct)
 
       reset()
+      setImageFile(null)
+      toast.success("Product added successfully")
+
     } catch (error) {
       console.error("Error adding product:", error)
+      toast.error("Failed to add product")
     } finally {
       setIsSubmitting(false)
     }
@@ -104,9 +122,9 @@ export default function AdminPanel() {
                   type="number" 
                   step="0.01" 
                   placeholder="39.99" 
-                  {...register("oldPrice", { required: "Old price is required" })}
+                  {...register("oldPrice")}
                 />
-                {errors.oldPrice && <p className="text-sm text-red-500">{errors.oldPrice.message as string}</p>}
+                {/* {errors.oldPrice && <p className="text-sm text-red-500">{errors.oldPrice.message as string}</p>} */}
               </div>
 
               <div className="space-y-2">
@@ -118,9 +136,9 @@ export default function AdminPanel() {
                   min="0" 
                   max="5" 
                   placeholder="4.5" 
-                  {...register("rating", { required: "Rating is required" })}
+                  {...register("rating")}
                 />
-                {errors.rating && <p className="text-sm text-red-500">{errors.rating.message as string}</p>}
+                {/* {errors.rating && <p className="text-sm text-red-500">{errors.rating.message as string}</p>} */}
               </div>
 
               <div className="space-y-2">
@@ -131,19 +149,23 @@ export default function AdminPanel() {
                   min="0" 
                   max="100" 
                   placeholder="10" 
-                  {...register("discount", { required: "Discount is required" })}
+                  {...register("discount")}
                 />
-                {errors.discount && <p className="text-sm text-red-500">{errors.discount.message as string}</p>}
+                {/* {errors.discount && <p className="text-sm text-red-500">{errors.discount.message as string}</p>} */}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="image">Image URL</Label>
-                <Input 
-                  id="image" 
-                  placeholder="https://example.com/image.jpg" 
-                  {...register("image", { required: "Image URL is required" })}
+                <Label htmlFor="image">Image File</Label>
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) setImageFile(file)
+                  }}
                 />
-                {errors.image && <p className="text-sm text-red-500">{errors.image.message as string}</p>}
+                {/* {!imageError && <p className="text-sm text-red-500">Image file is required</p>} */}
               </div>
 
               <div className="space-y-2">
