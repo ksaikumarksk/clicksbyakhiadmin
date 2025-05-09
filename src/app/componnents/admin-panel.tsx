@@ -50,7 +50,7 @@ const CATEGORIES = [
   "Women",
   "Men",
   "Kids",
-  "Home and kitchen",
+  "Home",
   "Beauty",
   "Jewellery and accessories",
   "Bags and foot wear",
