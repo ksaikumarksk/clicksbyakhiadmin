@@ -45,9 +45,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { watch } from "fs"
 
-// Product categories
 const CATEGORIES = [
   "Women",
   "Men",
@@ -58,6 +56,7 @@ const CATEGORIES = [
   "Bags and foot wear",
   "Electronics",
   "New born Baby needs",
+  "kitchen"
 ];
 
 export default function AdminPanel() {
