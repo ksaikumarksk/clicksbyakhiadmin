@@ -50,14 +50,15 @@ const CATEGORIES = [
   "Women",
   "Men",
   "Kids",
-  "Home",
+  "Home Need",
+  "Home decor",
   "Beauty",
-  "Jewellery and accessories",
+  "Jewellery",
+  "accessories",
   "Bags and foot wear",
   "Electronics",
   "New born Baby needs",
   "kitchen",
-  "decoration"
 ];
 
 export default function AdminPanel() {
