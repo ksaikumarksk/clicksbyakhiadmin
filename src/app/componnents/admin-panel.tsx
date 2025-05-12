@@ -59,6 +59,7 @@ const CATEGORIES = [
   "Electronics",
   "New born Baby needs",
   "kitchen",
+  "Gardening",
 ];
 
 export default function AdminPanel() {
