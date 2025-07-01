@@ -30,7 +30,21 @@ async function clientPromise(): Promise<Mongoose> {
         deprecationErrors: true,
       },
     });
+
+    mongoose.connection.on('disconnected', () => {
+      console.warn('MongoDB disconnected. Attempting to reconnect...');
+    });
+
+    mongoose.connection.on('error', (err) => {
+      console.error('MongoDB connection error:', err);
+    });
+
+    mongoose.connection.on('connected', () => {
+      console.log('MongoDB connected');
+    });
   }
+
+  
 
   cached.conn = await cached.promise;
   return cached.conn;

@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { getProducts } from "@/lib/actions";
+// import { varifyToken } from "../middleware/check-auth";
 
 export async function GET() {
-  // console.log("GET /api/products called");
   try {
+    // const auth = varifyToken(req)
+    // console.log("auth...", auth)
     const products = await getProducts();
-    console.log("Products retrieved:", products);
+    // console.log("Products retrieved:", products);
 
     return new NextResponse(
       JSON.stringify({ products }),
